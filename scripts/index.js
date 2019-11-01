@@ -196,25 +196,78 @@ pwnsBlack.forEach(p => {
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ (ЧЕРНЫЕ ПЕШКИ)
 
-//////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ ФЕРЗЯ
-let queens = [r1White, r2White, r1Black, r2Black]
-queens.forEach(el => {
+//////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ ЛАДЬИ
+let rooks = [r1White, r2White, r1Black, r2Black]
+rooks.forEach(el => {
     el.steps = function(i,j) {
-        while (i >= 0) {
+        let rememberI = i;
+        let rememberJ = j;
+        while (i > 0) {
+            i-=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)
+                    }
+                    break;
+                } 
+            }
+        }   
+        i = rememberI; 
+        while (i < 7) {
             i+=1;
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
                     possibleMoves.push(newTarget)
                 }               
-                else if (newTarget.childNodes[0].classList[1] !== "black") {
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)                    
+                    }
                     break;
-                }
+                } 
             }
-        }    
+        }
+        i = rememberI; 
+        while (j > 0) {
+            j-=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)
+                    }
+                    break;
+                } 
+            }
+        }   
+        j = rememberJ; 
+        while (j < 7) {
+            j+=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)                    
+                    }
+                    break;
+                } 
+            }
+        }
     }
 });
-//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ ФЕРЗЯ
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ ЛАДЬИ
 
 function turn(color) {
     if (color) {
@@ -250,40 +303,42 @@ document.getElementById("chessboard").addEventListener('click', () => {
             if (possibleMoves.indexOf(cell) != -1) {
                 let passLeft = 0;
                 let passRight = 0;
-                if (choosenFigure === leftPass) {
-                    passLeft = 1;
-                }
-                if (choosenFigure === rightPass) {
-                    passRight = 1;
-                }
-                leftPass = 0;
-                rightPass = 0;
                 if (choosenFigure === p1White || choosenFigure === p2White || choosenFigure === p3White || choosenFigure === p4White || choosenFigure === p5White || choosenFigure === p6White || choosenFigure === p7White || choosenFigure === p8White) {
-                    if (choosenFigure.time === 0) {
-                        choosenFigure.time = 1;
+                    if (choosenFigure === leftPass) {
+                        passLeft = 1;
                     }
-                }
-//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ ЧЕРНЫХ)
-                let i = cell.parentNode.rowIndex;
-                let j = cell.cellIndex;
-                if (i - choosenFigure.parentNode.parentNode.rowIndex === -2 && choosenFigure.parentNode.cellIndex !=0) {
-                    let firstChild = chessBoard.rows[i].cells[j-1].firstChild;
-                    if (firstChild) {
-                        if (firstChild.className.slice(7,16) === "black pwn") {
-                            leftPass = firstChild;
+                    if (choosenFigure === rightPass) {
+                        passRight = 1;
+                    }
+                    leftPass = 0;
+                    rightPass = 0;
+                    if (choosenFigure === p1White || choosenFigure === p2White || choosenFigure === p3White || choosenFigure === p4White || choosenFigure === p5White || choosenFigure === p6White || choosenFigure === p7White || choosenFigure === p8White) {
+                        if (choosenFigure.time === 0) {
+                            choosenFigure.time = 1;
                         }
                     }
-                }    
-                if (i - choosenFigure.parentNode.parentNode.rowIndex === -2 && choosenFigure.parentNode.cellIndex !=7) {
-                    let firstChild = chessBoard.rows[i].cells[j+1].firstChild;
-                    if (firstChild) {
-                        if (firstChild.className.slice(7,16) === "black pwn") {
-                            rightPass = firstChild;
+    //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ ЧЕРНЫХ)
+                    let i = cell.parentNode.rowIndex;
+                    let j = cell.cellIndex;
+                    if (i - choosenFigure.parentNode.parentNode.rowIndex === -2 && choosenFigure.parentNode.cellIndex !=0) {
+                        let firstChild = chessBoard.rows[i].cells[j-1].firstChild;
+                        if (firstChild) {
+                            if (firstChild.className.slice(7,16) === "black pwn") {
+                                leftPass = firstChild;
+                            }
                         }
-                    }
-                }
+                    }    
+                    if (i - choosenFigure.parentNode.parentNode.rowIndex === -2 && choosenFigure.parentNode.cellIndex !=7) {
+                        let firstChild = chessBoard.rows[i].cells[j+1].firstChild;
+                        if (firstChild) {
+                            if (firstChild.className.slice(7,16) === "black pwn") {
+                                rightPass = firstChild;
+                            }
+                        }
+                    }   
+    //\\\\\\\\\\\\\\\\\\\\\ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ ЧЕРНЫХ)
+                }   
 
-//\\\\\\\\\\\\\\\\\\\\\ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ ЧЕРНЫХ)
                 cell.appendChild(choosenFigure);
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (БЕЛЫЕ)
                 if (passLeft === 1 || passRight === 1) {
@@ -332,40 +387,42 @@ document.getElementById("chessboard").addEventListener('click', () => {
             if (possibleMoves.indexOf(cell) != -1) {
                 let passLeft = 0;
                 let passRight = 0;
-                if (choosenFigure === leftPass) {
-                    passLeft = 1;
-                }
-                if (choosenFigure === rightPass) {
-                    passRight = 1;
-                }
-                leftPass = 0;
-                rightPass = 0;
                 if (choosenFigure === p1Black || choosenFigure === p2Black || choosenFigure === p3Black || choosenFigure === p4Black || choosenFigure === p5Black || choosenFigure === p6Black || choosenFigure === p7Black || choosenFigure === p8Black) {
-                    if (choosenFigure.time === 0) {
-                        choosenFigure.time = 1;
+                    if (choosenFigure === leftPass) {
+                        passLeft = 1;
                     }
-                }  
-//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ БЕЛЫХ)
-                let i = cell.parentNode.rowIndex;
-                let j = cell.cellIndex;
-                if (i - choosenFigure.parentNode.parentNode.rowIndex === 2 && choosenFigure.parentNode.cellIndex !=7) {
-                    let firstChild = chessBoard.rows[i].cells[j+1].firstChild;
-                    if (firstChild) {
-                        if (firstChild.className.slice(7,16) === "white pwn") {
-                            leftPass = firstChild;
+                    if (choosenFigure === rightPass) {
+                        passRight = 1;
+                    }
+                    leftPass = 0;
+                    rightPass = 0;
+                    if (choosenFigure === p1Black || choosenFigure === p2Black || choosenFigure === p3Black || choosenFigure === p4Black || choosenFigure === p5Black || choosenFigure === p6Black || choosenFigure === p7Black || choosenFigure === p8Black) {
+                        if (choosenFigure.time === 0) {
+                            choosenFigure.time = 1;
                         }
-                    }
-                }    
-                if (i - choosenFigure.parentNode.parentNode.rowIndex === 2 && choosenFigure.parentNode.cellIndex !=0) {
-                    let firstChild = chessBoard.rows[i].cells[j-1].firstChild;
-                    if (firstChild) {
-                        if (firstChild.className.slice(7,16) === "white pwn") {
-                            rightPass = firstChild;
+                    }  
+    //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ БЕЛЫХ)
+                    let i = cell.parentNode.rowIndex;
+                    let j = cell.cellIndex;
+                    if (i - choosenFigure.parentNode.parentNode.rowIndex === 2 && choosenFigure.parentNode.cellIndex !=7) {
+                        let firstChild = chessBoard.rows[i].cells[j+1].firstChild;
+                        if (firstChild) {
+                            if (firstChild.className.slice(7,16) === "white pwn") {
+                                leftPass = firstChild;
+                            }
                         }
-                    }
+                    }    
+                    if (i - choosenFigure.parentNode.parentNode.rowIndex === 2 && choosenFigure.parentNode.cellIndex !=0) {
+                        let firstChild = chessBoard.rows[i].cells[j-1].firstChild;
+                        if (firstChild) {
+                            if (firstChild.className.slice(7,16) === "white pwn") {
+                                rightPass = firstChild;
+                            }
+                        }
+                    }   
+    //\\\\\\\\\\\\\\\\\\\\\ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ БЕЛЫХ)
                 }
-
-//\\\\\\\\\\\\\\\\\\\\\ВЗЯТИЕ НА ПРОХОДЕ (ПРОВЕРКА ДЛЯ БЕЛЫХ)
+                
                 cell.appendChild(choosenFigure);
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ЧЕРНЫЕ)
                 if (passLeft === 1 || passRight === 1) {
@@ -421,7 +478,12 @@ document.getElementById("chessboard").addEventListener('click', () => {
     if (cell === p1White || cell === p2White || cell === p3White || cell === p4White || cell === p5White || cell === p6White || cell === p7White || cell === p8White) {
         cell.steps(i,j)
     }   
-    //\\\\\\\\\\\\\\\\\\\\\БЕЛАЯ ПЕШКА  
+    //\\\\\\\\\\\\\\\\\\\\\БЕЛАЯ ПЕШКА
+    ///////////////////////WHITE ROOK
+    if (cell === r1White || cell === r2White) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE ROOK
   }
   else {
     possibleMoves = [];  
@@ -434,6 +496,11 @@ document.getElementById("chessboard").addEventListener('click', () => {
         cell.steps(i,j)
     }   
     //\\\\\\\\\\\\\\\\\\\\\ЧЕРНАЯ ПЕШКА
+    ///////////////////////BLACK ROOK
+    if (cell === r1Black || cell === r2Black) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\BLACK ROOK
   }
   //\\\\\\\\\\\\\\\\\\\\\\\ВЫБОР ФИГУР 
 })
