@@ -1,7 +1,7 @@
 function drawBoard(){
     let boardd = document.getElementById("chessboard");
     let color = [
-        "#618a61",
+        "rgb(105, 140, 194)",
         "#dddddd"
     ] 
     let count = 1;  
