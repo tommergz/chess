@@ -1,30 +1,62 @@
-.board {
-    margin: 50px 0;
+body {
+    width: 100%;
+    display: flex;
+    justify-items: center; 
 }
 
+.board {
+    margin: 50px auto;
+    background-color: black;
+}
 
+.up-letters, .bottom-letters {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+}
+
+.up-letters div, .bottom-letters div {
+    display: flex;
+}
+
+.up-letters div div, .bottom-letters div div {
+    width: 72px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: forestgreen;
+    font-weight: bold;
+}
+
+.table-wrapp {
+    margin: 0px auto;
+    display: flex;
+    justify-content: center;
+}
 
 #chessboard {
     width: 580px;
-    height: 580px;
-    margin: 0px auto;
-    border: 1px solid black;
+    height: 579px;
 }
 
-tbody tr {
-    display: flex;;
+#chessboard tr {
+    display: flex;
 }
 
-tbody td {
+#chessboard td {
     width: 70px;
     height: 70px;
 }
 
-tbody td:nth-child(odd) {
-    background: #526e52;
+.numbers {
+    width: 34px;
 }
-tbody td:nth-child(even) {
-    background: #dddddd;
+
+.numbers td {
+    height: 69px;
+    text-align: center;
+    color: forestgreen;
+    font-weight: bold;
 }
 
 .figure {

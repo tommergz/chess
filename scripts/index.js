@@ -1,5 +1,5 @@
 function drawBoard(){
-    let board = document.getElementById("chessboard");
+    let boardd = document.getElementById("chessboard");
     let color = [
         "#618a61",
         "#dddddd"
@@ -15,7 +15,7 @@ function drawBoard(){
             else {
                 x = 1;
             }
-            board.rows[i].cells[j].style.backgroundColor = color[x];
+            boardd.rows[i].cells[j].style.backgroundColor = color[x];
             if (j !== 7) {
                 count++;
             }
@@ -618,22 +618,35 @@ function checks() {
         return true;
     }
 }
-
+let upLetters = document.querySelector(".up-letters")
+let bottomLetters = document.querySelector(".bottom-letters")
 function turn(color) {
     if (color) {
         chessBoard.classList.add("turn");
+        upLetters.classList.add("turn");
+        bottomLetters.classList.add("turn");
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 chessBoard.rows[i].cells[j].classList.add("turn");
             }
         }
+        for (let i = 0; i < 8; i++) {           
+            upLetters.children[0].children[i].classList.add("turn");
+            bottomLetters.children[0].children[i].classList.add("turn");
+        }
     }
     else {
         chessBoard.classList.remove("turn");
+        upLetters.classList.remove("turn");
+        bottomLetters.classList.remove("turn");
         for (let i = 0; i < 8; i++) {
             for (let j = 0; j < 8; j++) {
                 chessBoard.rows[i].cells[j].classList.remove("turn");
             }
+        }
+        for (let i = 0; i < 8; i++) {           
+            upLetters.children[0].children[i].classList.remove("turn");
+            bottomLetters.children[0].children[i].classList.remove("turn");
         }
     }
     
