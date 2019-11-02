@@ -33,6 +33,7 @@ let possibleMoves = [];
 let color = true;
 let choosenFigure = null;
 let check = false;
+let allPossibleMoves = [];
 
 let p1White = document.getElementById('p1-white');
 p1White.time = 0;
@@ -102,7 +103,7 @@ let blackArr = [
 let pwnsWhite = [p1White, p2White, p3White, p4White, p5White, p6White, p7White, p8White]
 ////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ (БЕЛЫЕ ПЕШКИ)
 pwnsWhite.forEach(p => {
-    p.steps = function(i, j) {
+    p.steps = function(i, j, arr) {
         let point = i;
         i-=1;
         if (this.time > 0) {
@@ -115,26 +116,26 @@ pwnsWhite.forEach(p => {
             if (leftTarget) {
                 if (leftTarget.childNodes[0]) {
                     if (leftTarget.childNodes[0].classList[1] !== "white") {
-                        possibleMoves.push(leftTarget)
+                        arr.push(leftTarget)
                     }
                 }
             }
             if (rightTarget) {
                 if (rightTarget.childNodes[0]) {
                     if (rightTarget.childNodes[0].classList[1] !== "white") {
-                        possibleMoves.push(rightTarget)
+                        arr.push(rightTarget)
                     }
                 }
             }
             if (this === leftPass) {
-                possibleMoves.push(chessBoard.rows[leftPass.parentNode.parentNode.rowIndex -1].cells[leftPass.parentNode.cellIndex -1] );
+                arr.push(chessBoard.rows[leftPass.parentNode.parentNode.rowIndex -1].cells[leftPass.parentNode.cellIndex -1] );
             }
             if (this === rightPass) {
-                possibleMoves.push(chessBoard.rows[rightPass.parentNode.parentNode.rowIndex -1].cells[rightPass.parentNode.cellIndex +1] );
+                arr.push(chessBoard.rows[rightPass.parentNode.parentNode.rowIndex -1].cells[rightPass.parentNode.cellIndex +1] );
             }
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     break;
@@ -151,7 +152,7 @@ let pwnsBlack = [p1Black, p2Black, p3Black, p4Black, p5Black, p6Black, p7Black, 
 
 ////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ (ЧЕРНЫЕ ПЕШКИ)
 pwnsBlack.forEach(p => {
-    p.steps = function(i,j) {
+    p.steps = function(i, j, arr) {
         let point = i;
         i+=1;
         if (this.time > 0) {
@@ -164,26 +165,26 @@ pwnsBlack.forEach(p => {
             if (leftTarget) {
                 if (leftTarget.childNodes[0]) {
                     if (leftTarget.childNodes[0].classList[1] !== "black") {
-                        possibleMoves.push(leftTarget)
+                        arr.push(leftTarget)
                     }
                 }
             }
             if (rightTarget) {
                 if (rightTarget.childNodes[0]) {
                     if (rightTarget.childNodes[0].classList[1] !== "black") {
-                        possibleMoves.push(rightTarget)
+                        arr.push(rightTarget)
                     }
                 }
             }
             if (this === leftPass) {
-                possibleMoves.push(chessBoard.rows[leftPass.parentNode.parentNode.rowIndex +1].cells[leftPass.parentNode.cellIndex +1] );
+                arr.push(chessBoard.rows[leftPass.parentNode.parentNode.rowIndex +1].cells[leftPass.parentNode.cellIndex +1] );
             }
             if (this === rightPass) {
-                possibleMoves.push(chessBoard.rows[rightPass.parentNode.parentNode.rowIndex +1].cells[rightPass.parentNode.cellIndex -1] );
+                arr.push(chessBoard.rows[rightPass.parentNode.parentNode.rowIndex +1].cells[rightPass.parentNode.cellIndex -1] );
             }
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     break;
@@ -199,7 +200,7 @@ pwnsBlack.forEach(p => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ ЛАДЬИ
 let rooks = [r1White, r2White, r1Black, r2Black]
 rooks.forEach(el => {
-    el.steps = function(i,j) {
+    el.steps = function(i, j, arr) {
         let rememberI = i;
         let rememberJ = j;
         while (i > 0) {
@@ -207,11 +208,11 @@ rooks.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)
+                        arr.push(newTarget)
                     }
                     break;
                 } 
@@ -223,11 +224,11 @@ rooks.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)                    
+                        arr.push(newTarget)                    
                     }
                     break;
                 } 
@@ -239,11 +240,11 @@ rooks.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)
+                        arr.push(newTarget)
                     }
                     break;
                 } 
@@ -255,11 +256,11 @@ rooks.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)                    
+                        arr.push(newTarget)                    
                     }
                     break;
                 } 
@@ -271,7 +272,7 @@ rooks.forEach(el => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ СЛОНА
 let bishops = [b1White, b2White, b1Black, b2Black]
 bishops.forEach(el => {
-    el.steps = function(i,j) {
+    el.steps = function(i, j, arr) {
         let rememberI = i;
         let rememberJ = j;
         while (i > 0 && j >0) {
@@ -280,11 +281,11 @@ bishops.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)
+                        arr.push(newTarget)
                     }
                     break;
                 } 
@@ -298,11 +299,11 @@ bishops.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)                    
+                        arr.push(newTarget)                    
                     }
                     break;
                 } 
@@ -316,11 +317,11 @@ bishops.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)
+                        arr.push(newTarget)
                     }
                     break;
                 } 
@@ -334,11 +335,11 @@ bishops.forEach(el => {
             let newTarget = chessBoard.rows[i].cells[j];
             if (newTarget) {
                 if (!newTarget.childNodes.length) {
-                    possibleMoves.push(newTarget)
+                    arr.push(newTarget)
                 }               
                 else {
                     if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-                        possibleMoves.push(newTarget)                    
+                        arr.push(newTarget)                    
                     }
                     break;
                 } 
@@ -351,12 +352,203 @@ bishops.forEach(el => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
 let queens = [qWhite, qBlack]
 queens.forEach(el => {
-    el.steps = function(i,j) {
-        r1White.steps.call(el, i, j);
-        b1White.steps.call(el, i, j);
+    el.steps = function(i,j,arr) {
+        r1White.steps.call(el, i, j, arr);
+        b1White.steps.call(el, i, j, arr);
     } 
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
+
+
+//////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОНЯ
+let knights = [kn1White, kn2White, kn1Black, kn2Black]
+knights.forEach(el => {
+    el.steps = function(i, j, arr) {
+        let rememberI = i; 
+        let rememberJ = j;
+        i +=2;
+        j -=1;
+
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i +=2;
+        j +=1;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i -=2;
+        j -=1;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i -=2;
+        j +=1;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i -=1;
+        j +=2;
+
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i +=1;
+        j +=2;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i -=1;
+        j -=2;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+        i = rememberI;
+        j = rememberJ;
+        i +=1;
+        j -=2;
+        if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+            newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    arr.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        arr.push(newTarget)
+                    }
+                } 
+            }
+        }
+    } 
+    
+});
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОНЯ
+
+/////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЯ
+let kings = [kWhite, kBlack]
+kings.forEach(el => {
+    el.steps = function(i,j, arr) {
+        let newTarget;
+        let rememberI = i;
+        let rememberJ = j;
+        i -=1;             
+        for (i; i < rememberI + 2; i++) {
+            j = rememberJ;
+            j -=1;
+            for (j; j < rememberJ+ 2; j++) {
+                if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+                    newTarget = chessBoard.rows[i].cells[j];
+                    if (newTarget) {
+                        if (!newTarget.childNodes.length) {
+                            arr.push(newTarget)
+                        }               
+                        else {
+                            if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+
+                                arr.push(newTarget)
+                            }
+                        } 
+                    }
+                }
+            
+            }
+            
+        }       
+    } 
+});
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЯ
+
+function whiteCheck(figure) {
+    let arr;
+    color ? arr = whiteArr : arr = blackArr;
+    arr.forEach(el => {
+        el
+    });  
+        
+}
 
 function turn(color) {
     if (color) {
@@ -565,24 +757,34 @@ document.getElementById("chessboard").addEventListener('click', () => {
 
     ///////////////////////БЕЛАЯ ПЕШКА
     if (cell === p1White || cell === p2White || cell === p3White || cell === p4White || cell === p5White || cell === p6White || cell === p7White || cell === p8White) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }   
     //\\\\\\\\\\\\\\\\\\\\\БЕЛАЯ ПЕШКА
     ///////////////////////WHITE ROOK
     if (cell === r1White || cell === r2White) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1White || cell === b2White) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////WHITE QUEEN
     if (cell === qWhite) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE QUEEN
+    ///////////////////////WHITE KNIGHT
+    if (cell === kn1White || cell === kn2White) {
+        cell.steps(i, j, possibleMoves)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE KNIGHT
+    ///////////////////////WHITE KING
+    if (cell === kWhite) {
+        cell.steps(i, j, possibleMoves)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
   else {
     possibleMoves = [];  
@@ -592,24 +794,34 @@ document.getElementById("chessboard").addEventListener('click', () => {
     
     ///////////////////////ЧЕРНАЯ ПЕШКА
     if (cell === p1Black || cell === p2Black || cell === p3Black || cell === p4Black || cell === p5Black || cell === p6Black || cell === p7Black || cell === p8Black) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }   
     //\\\\\\\\\\\\\\\\\\\\\ЧЕРНАЯ ПЕШКА
     ///////////////////////BLACK ROOK
     if (cell === r1Black || cell === r2Black) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1Black || cell === b2Black) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////BLACK QUEEN
     if (cell === qBlack) {
-        cell.steps(i,j)
+        cell.steps(i, j, possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK QUEEN
+    ///////////////////////BLACK KNIGHT
+    if (cell === kn1Black || cell === kn2Black) {
+        cell.steps(i, j, possibleMoves)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\BLACK KNIGHT
+    ///////////////////////WHITE KING
+    if (cell === kBlack) {
+        cell.steps(i, j, possibleMoves)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
   //\\\\\\\\\\\\\\\\\\\\\\\ВЫБОР ФИГУР 
 })
