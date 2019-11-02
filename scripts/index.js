@@ -612,9 +612,11 @@ function checks() {
         el.steps(allPossibleMoves);
     }); 
     if (allPossibleMoves.indexOf(king.parentNode) === -1) {
+        choosenFigure = null;
         return false;
     }
     else {
+        choosenFigure = null;
         return true;
     }
 }
@@ -657,6 +659,7 @@ let rightPass = 0;
 
 document.getElementById("chessboard").addEventListener('click', () => {
     let cell = event.target;
+    
 ///////////////////////ХОДЫ    
     if (color) {
 
@@ -669,6 +672,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
 
         if (cell.tagName.toLowerCase() === 'td' && choosenFigure) {
             if (choosenFigure.tagName === 'TD') {
+                lightenOff();
                 return;
             }
             if (possibleMoves.indexOf(cell) != -1) {
@@ -724,9 +728,13 @@ document.getElementById("chessboard").addEventListener('click', () => {
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (БЕЛЫЕ)                  
                                   
                 if (checks()) {
+                    lightenOff();
+                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex - currentFigure.parentNode.rowIndex === 2) {
+                        previousFigure.time = 0;
+                    }
+
                     whiteArr = whiteArrReserve;
-                    blackArr = blackArrReserve;
-                    
+                    blackArr = blackArrReserve;                  
                     previousCell.appendChild(previousFigure);
                     if (currentFigure.tagName === 'DIV') {
                         currentCell.appendChild(currentFigure);
@@ -742,6 +750,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
         if (cell.className.slice(7,12) === 'black' && choosenFigure) {
             cell = cell.parentNode;
             if (choosenFigure.tagName === 'TD') {
+                lightenOff();
                 return;
             }
             if (possibleMoves.indexOf(cell) != -1) {
@@ -758,9 +767,13 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 cell.appendChild(choosenFigure);
 
                 if (checks()) {
+                    lightenOff();
+
+                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex - currentFigure.parentNode.rowIndex === 2) {
+                        previousFigure.time = 0;
+                    }
                     whiteArr = whiteArrReserve;
-                    blackArr = blackArrReserve;
-                    
+                    blackArr = blackArrReserve;           
                     previousCell.appendChild(previousFigure);
                     if (currentFigure.tagName === 'DIV') {
                         currentCell.appendChild(currentFigure);
@@ -839,9 +852,14 @@ document.getElementById("chessboard").addEventListener('click', () => {
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ЧЕРНЫЕ)     
 
                 if (checks()) {
+                    lightenOff();
+                    
+                    if (previousFigure.className.slice(7,16) === 'black pwn' && currentFigure.parentNode.rowIndex - previousCell.parentNode.rowIndex === 2) {
+                        previousFigure.time = 0;
+                    }
+
                     whiteArr = whiteArrReserve;
                     blackArr = blackArrReserve;
-                    
                     previousCell.appendChild(previousFigure);
                     if (currentFigure.tagName === 'DIV') {
                         currentCell.appendChild(currentFigure);
@@ -873,9 +891,13 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 cell.appendChild(choosenFigure);
 
                 if (checks()) {
+                    lightenOff();
+                    if (previousFigure.className.slice(7,16) === 'black pwn' && currentFigure.parentNode.rowIndex - previousCell.parentNode.rowIndex === 2) {
+                        previousFigure.time = 0;
+                    }
+
                     whiteArr = whiteArrReserve;
-                    blackArr = blackArrReserve;
-                    
+                    blackArr = blackArrReserve;                    
                     previousCell.appendChild(previousFigure);
                     if (currentFigure.tagName === 'DIV') {
                         currentCell.appendChild(currentFigure);
@@ -890,6 +912,26 @@ document.getElementById("chessboard").addEventListener('click', () => {
     }
 //\\\\\\\\\\\\\\\\\\\\\ХОДЫ  
 
+
+function lighten() {
+    whiteArr.forEach(el => {
+        el.style.color = "black";
+    });
+    blackArr.forEach(el => {
+        el.style.color = "black";
+    });
+    cell.style.color = '#ffbb00';
+}   
+
+function lightenOff() {
+    whiteArr.forEach(el => {
+        el.style.color = "black";
+    });
+    blackArr.forEach(el => {
+        el.style.color = "black";
+    });
+}
+
 ///////////////////////ВЫБОР ФИГУР 
   if (color) {
     possibleMoves = [];
@@ -900,35 +942,42 @@ document.getElementById("chessboard").addEventListener('click', () => {
     ///////////////////////БЕЛАЯ ПЕШКА
     if (cell === p1White || cell === p2White || cell === p3White || cell === p4White || cell === p5White || cell === p6White || cell === p7White || cell === p8White) {
         cell.steps(possibleMoves)
+        lighten()
     }   
     //\\\\\\\\\\\\\\\\\\\\\БЕЛАЯ ПЕШКА
     ///////////////////////WHITE ROOK
     if (cell === r1White || cell === r2White) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1White || cell === b2White) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////WHITE QUEEN
     if (cell === qWhite) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE QUEEN
     ///////////////////////WHITE KNIGHT
     if (cell === kn1White || cell === kn2White) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KNIGHT
     ///////////////////////WHITE KING
     if (cell === kWhite) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
   else {
+    
     possibleMoves = [];  
     choosenFigure = cell;
     previousCell = cell.parentNode;
@@ -937,31 +986,37 @@ document.getElementById("chessboard").addEventListener('click', () => {
     ///////////////////////ЧЕРНАЯ ПЕШКА
     if (cell === p1Black || cell === p2Black || cell === p3Black || cell === p4Black || cell === p5Black || cell === p6Black || cell === p7Black || cell === p8Black) {
         cell.steps(possibleMoves)
+        lighten()
     }   
     //\\\\\\\\\\\\\\\\\\\\\ЧЕРНАЯ ПЕШКА
     ///////////////////////BLACK ROOK
     if (cell === r1Black || cell === r2Black) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1Black || cell === b2Black) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////BLACK QUEEN
     if (cell === qBlack) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK QUEEN
     ///////////////////////BLACK KNIGHT
     if (cell === kn1Black || cell === kn2Black) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK KNIGHT
     ///////////////////////WHITE KING
     if (cell === kBlack) {
         cell.steps(possibleMoves)
+        lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
