@@ -1,7 +1,13 @@
+.board {
+    margin: 50px 0;
+}
+
+
+
 #chessboard {
     width: 580px;
     height: 580px;
-    margin: 30px auto;
+    margin: 0px auto;
     border: 1px solid black;
 }
 

@@ -1,7 +1,7 @@
 function drawBoard(){
     let board = document.getElementById("chessboard");
     let color = [
-        "#526e52",
+        "#618a61",
         "#dddddd"
     ] 
     let count = 1;  
@@ -34,6 +34,10 @@ let color = true;
 let choosenFigure = null;
 let check = false;
 let allPossibleMoves = [];
+let previousCell;
+let previousFigure;
+let currentCell;
+let currentFigure;
 
 let p1White = document.getElementById('p1-white');
 p1White.time = 0;
@@ -103,8 +107,11 @@ let blackArr = [
 let pwnsWhite = [p1White, p2White, p3White, p4White, p5White, p6White, p7White, p8White]
 ////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ (БЕЛЫЕ ПЕШКИ)
 pwnsWhite.forEach(p => {
-    p.steps = function(i, j, arr) {
+    p.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let point = i;
+        let beat = i - 1;
         i-=1;
         if (this.time > 0) {
             point +=1;
@@ -115,14 +122,15 @@ pwnsWhite.forEach(p => {
             let rightTarget = chessBoard.rows[i].cells[j+1];
             if (leftTarget) {
                 if (leftTarget.childNodes[0]) {
-                    if (leftTarget.childNodes[0].classList[1] !== "white") {
+                    if (leftTarget.childNodes[0].classList[1] !== "white" && i === beat) {
                         arr.push(leftTarget)
                     }
+                    
                 }
             }
             if (rightTarget) {
                 if (rightTarget.childNodes[0]) {
-                    if (rightTarget.childNodes[0].classList[1] !== "white") {
+                    if (rightTarget.childNodes[0].classList[1] !== "white" && i === beat) {
                         arr.push(rightTarget)
                     }
                 }
@@ -152,8 +160,11 @@ let pwnsBlack = [p1Black, p2Black, p3Black, p4Black, p5Black, p6Black, p7Black, 
 
 ////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ (ЧЕРНЫЕ ПЕШКИ)
 pwnsBlack.forEach(p => {
-    p.steps = function(i, j, arr) {
+    p.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let point = i;
+        let beat = i + 1;
         i+=1;
         if (this.time > 0) {
             point -=1;
@@ -164,14 +175,14 @@ pwnsBlack.forEach(p => {
             let rightTarget = chessBoard.rows[i].cells[j+1];
             if (leftTarget) {
                 if (leftTarget.childNodes[0]) {
-                    if (leftTarget.childNodes[0].classList[1] !== "black") {
+                    if (leftTarget.childNodes[0].classList[1] !== "black" && i === beat) {
                         arr.push(leftTarget)
                     }
                 }
             }
             if (rightTarget) {
                 if (rightTarget.childNodes[0]) {
-                    if (rightTarget.childNodes[0].classList[1] !== "black") {
+                    if (rightTarget.childNodes[0].classList[1] !== "black" && i === beat) {
                         arr.push(rightTarget)
                     }
                 }
@@ -200,7 +211,9 @@ pwnsBlack.forEach(p => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ ЛАДЬИ
 let rooks = [r1White, r2White, r1Black, r2Black]
 rooks.forEach(el => {
-    el.steps = function(i, j, arr) {
+    el.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let rememberI = i;
         let rememberJ = j;
         while (i > 0) {
@@ -272,7 +285,9 @@ rooks.forEach(el => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ СЛОНА
 let bishops = [b1White, b2White, b1Black, b2Black]
 bishops.forEach(el => {
-    el.steps = function(i, j, arr) {
+    el.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let rememberI = i;
         let rememberJ = j;
         while (i > 0 && j >0) {
@@ -352,9 +367,9 @@ bishops.forEach(el => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
 let queens = [qWhite, qBlack]
 queens.forEach(el => {
-    el.steps = function(i,j,arr) {
-        r1White.steps.call(el, i, j, arr);
-        b1White.steps.call(el, i, j, arr);
+    el.steps = function(arr) {
+        r1White.steps.call(el, arr);
+        b1White.steps.call(el, arr);
     } 
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
@@ -363,7 +378,9 @@ queens.forEach(el => {
 //////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОНЯ
 let knights = [kn1White, kn2White, kn1Black, kn2Black]
 knights.forEach(el => {
-    el.steps = function(i, j, arr) {
+    el.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let rememberI = i; 
         let rememberJ = j;
         i +=2;
@@ -510,7 +527,9 @@ knights.forEach(el => {
 /////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЯ
 let kings = [kWhite, kBlack]
 kings.forEach(el => {
-    el.steps = function(i,j, arr) {
+    el.steps = function(arr) {
+        let i = this.parentNode.parentNode.rowIndex;
+        let j = this.parentNode.cellIndex;
         let newTarget;
         let rememberI = i;
         let rememberJ = j;
@@ -527,8 +546,7 @@ kings.forEach(el => {
                         }               
                         else {
                             if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
-
-                                arr.push(newTarget)
+                                cover(newTarget, arr)
                             }
                         } 
                     }
@@ -537,17 +555,68 @@ kings.forEach(el => {
             }
             
         }       
+        color ? king = kBlack : king = kWhite;
+        i = king.parentNode.parentNode.rowIndex;
+        j = king.parentNode.cellIndex;
+        rememberI = i;
+        rememberJ = j;
+        i -=1;        
+        for (i; i < rememberI + 2; i++) {
+            j = rememberJ;
+            j -=1;
+            for (j; j < rememberJ+ 2; j++) {
+                if (i >= 0 && i <= 7 && j >= 0 && j <= 7) {
+                    newTarget = chessBoard.rows[i].cells[j];
+                    if (newTarget) {
+                        if (!newTarget.childNodes.length) {
+                            arr.remove(newTarget)
+                        }               
+                    }
+                }
+            
+            }
+            
+        } 
     } 
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЯ
 
-function whiteCheck(figure) {
+function cover(figure, massive) {
+    allPossibleMoves = [];
     let arr;
-    color ? arr = whiteArr : arr = blackArr;
+    let king;
+    color ? arr = blackArr : arr = whiteArr;
+    color ? king = kBlack : king = kWhite;
+    arr.remove(king);
     arr.forEach(el => {
-        el
-    });  
-        
+        el.steps(allPossibleMoves);
+    });        
+    if (allPossibleMoves.indexOf(figure) === -1) {
+        massive.push(figure)
+    }
+}
+
+Array.prototype.remove = function(value) {
+    let i = this.indexOf(value);
+    if (i != -1) {
+        return this.splice(i,1);
+    }
+}
+function checks() {
+    allPossibleMoves = [];
+    let king;
+    color ? king = kWhite : king = kBlack;
+    color ? arr = blackArr : arr = whiteArr;
+    color ? choosenFigure = kBlack : choosenFigure = kWhite;
+    arr.forEach(el => {
+        el.steps(allPossibleMoves);
+    }); 
+    if (allPossibleMoves.indexOf(king.parentNode) === -1) {
+        return false;
+    }
+    else {
+        return true;
+    }
 }
 
 function turn(color) {
@@ -577,6 +646,14 @@ document.getElementById("chessboard").addEventListener('click', () => {
     let cell = event.target;
 ///////////////////////ХОДЫ    
     if (color) {
+
+        let whiteArrReserve = whiteArr;
+        let blackArrReserve = blackArr; 
+        currentFigure = cell;
+        if (currentFigure.tagName === 'DIV') {
+            currentCell = currentFigure.parentNode;
+        }
+
         if (cell.tagName.toLowerCase() === 'td' && choosenFigure) {
             if (choosenFigure.tagName === 'TD') {
                 return;
@@ -633,6 +710,17 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 }
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (БЕЛЫЕ)                  
                                   
+                if (checks()) {
+                    whiteArr = whiteArrReserve;
+                    blackArr = blackArrReserve;
+                    
+                    previousCell.appendChild(previousFigure);
+                    if (currentFigure.tagName === 'DIV') {
+                        currentCell.appendChild(currentFigure);
+                    }
+                    return;
+                }
+
                 setTimeout(turn, 500, color); 
                 color = !color;
             }           
@@ -655,12 +743,32 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 blackArr = blackArr.filter((el) => el !== cell.firstChild);
                 cell.removeChild(cell.firstChild);
                 cell.appendChild(choosenFigure);
+
+                if (checks()) {
+                    whiteArr = whiteArrReserve;
+                    blackArr = blackArrReserve;
+                    
+                    previousCell.appendChild(previousFigure);
+                    if (currentFigure.tagName === 'DIV') {
+                        currentCell.appendChild(currentFigure);
+                    }
+                    return;
+                }
+
                 setTimeout(turn, 500, color); 
                 color = !color;
             }
         }
     }
     else {
+
+        let whiteArrReserve = whiteArr;
+        let blackArrReserve = blackArr; 
+        currentFigure = cell;
+        if (currentFigure.tagName === 'DIV') {
+            currentCell = currentFigure.parentNode;
+        }
+
         if (cell.tagName.toLowerCase() === 'td' && choosenFigure) {
             if (choosenFigure.tagName === 'TD') {
                 return;
@@ -715,9 +823,18 @@ document.getElementById("chessboard").addEventListener('click', () => {
                         }
                     }
                 }
+//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ЧЕРНЫЕ)     
 
-
-//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ЧЕРНЫЕ)                
+                if (checks()) {
+                    whiteArr = whiteArrReserve;
+                    blackArr = blackArrReserve;
+                    
+                    previousCell.appendChild(previousFigure);
+                    if (currentFigure.tagName === 'DIV') {
+                        currentCell.appendChild(currentFigure);
+                    }
+                    return;
+                }
                 setTimeout(turn, 500, color);
                 color = !color;
             }           
@@ -741,6 +858,18 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 whiteArr = whiteArr.filter((el) => el !== cell.firstChild);
                 cell.removeChild(cell.firstChild);
                 cell.appendChild(choosenFigure);
+
+                if (checks()) {
+                    whiteArr = whiteArrReserve;
+                    blackArr = blackArrReserve;
+                    
+                    previousCell.appendChild(previousFigure);
+                    if (currentFigure.tagName === 'DIV') {
+                        currentCell.appendChild(currentFigure);
+                    }
+                    return;
+                }
+
                 setTimeout(turn, 500, color);
                 color = !color;
             }
@@ -752,74 +881,74 @@ document.getElementById("chessboard").addEventListener('click', () => {
   if (color) {
     possibleMoves = [];
     choosenFigure = cell;
-    let i = cell.parentNode.parentNode.rowIndex;
-    let j = cell.parentNode.cellIndex;
+    previousCell = cell.parentNode;
+    previousFigure = cell;
 
     ///////////////////////БЕЛАЯ ПЕШКА
     if (cell === p1White || cell === p2White || cell === p3White || cell === p4White || cell === p5White || cell === p6White || cell === p7White || cell === p8White) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }   
     //\\\\\\\\\\\\\\\\\\\\\БЕЛАЯ ПЕШКА
     ///////////////////////WHITE ROOK
     if (cell === r1White || cell === r2White) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1White || cell === b2White) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////WHITE QUEEN
     if (cell === qWhite) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE QUEEN
     ///////////////////////WHITE KNIGHT
     if (cell === kn1White || cell === kn2White) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KNIGHT
     ///////////////////////WHITE KING
     if (cell === kWhite) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
   else {
     possibleMoves = [];  
     choosenFigure = cell;
-    let i = cell.parentNode.parentNode.rowIndex;
-    let j = cell.parentNode.cellIndex;
+    previousCell = cell.parentNode;
+    previousFigure = cell;
     
     ///////////////////////ЧЕРНАЯ ПЕШКА
     if (cell === p1Black || cell === p2Black || cell === p3Black || cell === p4Black || cell === p5Black || cell === p6Black || cell === p7Black || cell === p8Black) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }   
     //\\\\\\\\\\\\\\\\\\\\\ЧЕРНАЯ ПЕШКА
     ///////////////////////BLACK ROOK
     if (cell === r1Black || cell === r2Black) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK ROOK
     ///////////////////////WHITE BISHOP
     if (cell === b1Black || cell === b2Black) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
     ///////////////////////BLACK QUEEN
     if (cell === qBlack) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK QUEEN
     ///////////////////////BLACK KNIGHT
     if (cell === kn1Black || cell === kn2Black) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK KNIGHT
     ///////////////////////WHITE KING
     if (cell === kBlack) {
-        cell.steps(i, j, possibleMoves)
+        cell.steps(possibleMoves)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
   }
