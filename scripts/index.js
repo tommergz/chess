@@ -268,6 +268,95 @@ rooks.forEach(el => {
     }
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ ЛАДЬИ
+//////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ СЛОНА
+let bishops = [b1White, b2White, b1Black, b2Black]
+bishops.forEach(el => {
+    el.steps = function(i,j) {
+        let rememberI = i;
+        let rememberJ = j;
+        while (i > 0 && j >0) {
+            i-=1;
+            j-=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)
+                    }
+                    break;
+                } 
+            }
+        }   
+        i = rememberI; 
+        j = rememberJ;
+        while (i < 7 && j < 7) {
+            i+=1;
+            j+=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)                    
+                    }
+                    break;
+                } 
+            }
+        }
+        i = rememberI; 
+        j = rememberJ;
+        while (i < 7 && j > 0) {
+            i+=1;
+            j-=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)
+                    }
+                    break;
+                } 
+            }
+        }   
+        i = rememberI; 
+        j = rememberJ;
+        while (i > 0 && j < 7) {
+            i-=1;
+            j+=1;
+            let newTarget = chessBoard.rows[i].cells[j];
+            if (newTarget) {
+                if (!newTarget.childNodes.length) {
+                    possibleMoves.push(newTarget)
+                }               
+                else {
+                    if (newTarget.firstChild.className.slice(0,12) !== choosenFigure.className.slice(0,12)) {
+                        possibleMoves.push(newTarget)                    
+                    }
+                    break;
+                } 
+            }
+        }
+    }
+});
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ СЛОНА
+
+//////////////////////////////////МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
+let queens = [qWhite, qBlack]
+queens.forEach(el => {
+    el.steps = function(i,j) {
+        r1White.steps.call(el, i, j);
+        b1White.steps.call(el, i, j);
+    } 
+});
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЕВЫ
 
 function turn(color) {
     if (color) {
@@ -484,6 +573,16 @@ document.getElementById("chessboard").addEventListener('click', () => {
         cell.steps(i,j)
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE ROOK
+    ///////////////////////WHITE BISHOP
+    if (cell === b1White || cell === b2White) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
+    ///////////////////////WHITE QUEEN
+    if (cell === qWhite) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE QUEEN
   }
   else {
     possibleMoves = [];  
@@ -501,6 +600,16 @@ document.getElementById("chessboard").addEventListener('click', () => {
         cell.steps(i,j)
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK ROOK
+    ///////////////////////WHITE BISHOP
+    if (cell === b1Black || cell === b2Black) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\WHITE BISHOP
+    ///////////////////////BLACK QUEEN
+    if (cell === qBlack) {
+        cell.steps(i,j)
+    }
+    //\\\\\\\\\\\\\\\\\\\\\BLACK QUEEN
   }
   //\\\\\\\\\\\\\\\\\\\\\\\ВЫБОР ФИГУР 
 })
