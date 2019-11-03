@@ -38,6 +38,7 @@ let previousCell;
 let previousFigure;
 let currentCell;
 let currentFigure;
+let figureTime = 1;
 
 let p1White = document.getElementById('p1-white');
 p1White.time = 0;
@@ -74,9 +75,13 @@ let p8Black = document.getElementById('p8-black');
 p8Black.time = 0;
 
 let r1White = document.getElementById('r1-white');
+r1White.time = 0;
 let r2White = document.getElementById('r2-white');
+r2White.time = 0;
 let r1Black = document.getElementById('r1-black');
+r1Black.time = 0;
 let r2Black = document.getElementById('r2-black');
+r2Black.time = 0;
 
 let kn1White = document.getElementById('kn1-white');
 let kn2White = document.getElementById('kn2-white');
@@ -92,7 +97,9 @@ let qWhite = document.getElementById('q-white');
 let qBlack = document.getElementById('q-black');
 
 let kWhite = document.getElementById('k-white');
+kWhite.time = 0;
 let kBlack = document.getElementById('k-black');
+kBlack.time = 0;
 
 let whiteArr = [
     p1White, p2White, p3White, p4White, p5White, p6White, p7White, p8White,
@@ -552,9 +559,37 @@ kings.forEach(el => {
                     }
                 }
             
-            }
-            
+            }            
         }       
+
+        i = this.parentNode.parentNode.rowIndex;
+        j = this.parentNode.cellIndex - 1;
+        newTarget = chessBoard.rows[i].cells[j];
+        color ? rook = r1White : r1Black;
+        if (!newTarget.childNodes.length && this.time === 0 && rook.time === 0) {
+            if (cover(newTarget, possibleMoves)) {
+                j-=1;
+                newTarget = chessBoard.rows[i].cells[j];
+                if (!newTarget.childNodes.length) { 
+                    cover(newTarget, possibleMoves);
+                }  
+            }
+           
+        } 
+        i = this.parentNode.parentNode.rowIndex;
+        j = this.parentNode.cellIndex + 1;
+        newTarget = chessBoard.rows[i].cells[j];
+        color ? rook = r2White : r2Black;
+        if (!newTarget.childNodes.length && this.time === 0 && rook.time === 0) {
+            if (cover(newTarget, possibleMoves)) {
+                j+=1; 
+                newTarget = chessBoard.rows[i].cells[j];
+                if (!newTarget.childNodes.length && this.time === 0) {
+                    cover(newTarget, possibleMoves);
+                }  
+            }          
+        } 
+
         color ? king = kBlack : king = kWhite;
         i = king.parentNode.parentNode.rowIndex;
         j = king.parentNode.cellIndex;
@@ -576,7 +611,7 @@ kings.forEach(el => {
             
             }
             
-        } 
+        }  
     } 
 });
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\МЕТОД ДЛЯ ПОИСКА ХОДОВ КОРОЛЯ
@@ -590,10 +625,15 @@ function cover(figure, massive) {
     arr.remove(king);
     arr.forEach(el => {
         el.steps(allPossibleMoves);
-    });        
+    });  
+    arr.push(king);      
     if (allPossibleMoves.indexOf(figure) === -1) {
-        massive.push(figure)
+        if (massive.indexOf(figure) === -1) {
+            massive.push(figure)
+        }     
+        return true;
     }
+    return false;
 }
 
 Array.prototype.remove = function(value) {
@@ -612,11 +652,11 @@ function checks() {
         el.steps(allPossibleMoves);
     }); 
     if (allPossibleMoves.indexOf(king.parentNode) === -1) {
-        choosenFigure = null;
+        choosenFigure = null;         
         return false;
     }
     else {
-        choosenFigure = null;
+        choosenFigure = null; 
         return true;
     }
 }
@@ -673,6 +713,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
 ///////////////////////ХОДЫ    
     if (color) {
 
+        figureTime = 1;
         let whiteArrReserve = whiteArr;
         let blackArrReserve = blackArr; 
         currentFigure = cell;
@@ -735,12 +776,21 @@ document.getElementById("chessboard").addEventListener('click', () => {
                         }
                     }
                 }
-//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (БЕЛЫЕ)                  
+//////////////////////ВЗЯТИЕ НА ПРОХОДЕ (БЕЛЫЕ) 
+
+                if (choosenFigure === r1White || choosenFigure === r2White || choosenFigure === kWhite) {  
+                    if (choosenFigure.time === 0) { figureTime = 0} // figureTime = 0 если шаг или рокировка потом                
+                    choosenFigure.time = 1;
+                }
                                   
                 if (checks()) {
                     lightenOff();
                     if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex === 6) {
                         previousFigure.time = 0;
+                    }
+                    else if (previousFigure.time && previousFigure.className.slice(13,16) !== 'pwn') {
+                        previousFigure.time = figureTime;
+                        figureTime = 1;
                     }
                     
                     errorStep();
@@ -754,6 +804,19 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     return;
                 }
 
+//////////////////////////////////CASTLING
+
+                    if (cell.firstChild === kWhite && currentFigure.cellIndex - previousCell.cellIndex === 2
+                         && figureTime === 0 && whiteArr.indexOf(r2White) !== -1 && r2White.time === 0) {
+                        chessBoard.rows[7].cells[5].appendChild(r2White)
+                    }
+                    if (cell.firstChild === kWhite && currentFigure.cellIndex - previousCell.cellIndex === -2
+                        && figureTime === 0 && whiteArr.indexOf(r1White) !== -1 && r1White.time === 0) {
+                       chessBoard.rows[7].cells[3].appendChild(r1White)
+                    }
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\CASTLING
+                
                 setTimeout(turn, 500, color); 
                 color = !color;
             }           
@@ -781,11 +844,20 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 cell.removeChild(cell.firstChild);
                 cell.appendChild(choosenFigure);
 
+                if (choosenFigure === r1White || choosenFigure === r2White || choosenFigure === kWhite) {  
+                    if (choosenFigure.time === 0) { figureTime = 0 }  // figureTime = 0 если шаг или рокировка потом              
+                    choosenFigure.time = 1;
+                }
+
                 if (checks()) {
                     lightenOff();
 
                     if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex === 6) {
                         previousFigure.time = 0;
+                    }
+                    else if (previousFigure.time && previousFigure.className.slice(13,16) !== 'pwn') {
+                        previousFigure.time = figureTime;
+                        figureTime = 1;
                     }
 
                     errorStep();
@@ -809,6 +881,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
     }
     else {
 
+        figureTime = 1;
         let whiteArrReserve = whiteArr;
         let blackArrReserve = blackArr; 
         currentFigure = cell;
@@ -872,12 +945,21 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 }
 //////////////////////ВЗЯТИЕ НА ПРОХОДЕ (ЧЕРНЫЕ)     
 
+                if (choosenFigure === r1Black || choosenFigure === r2Black || choosenFigure === kBlack) {  
+                    if (choosenFigure.time === 0) { figureTime = 0}                
+                    choosenFigure.time = 1;
+                }
+
                 if (checks()) {
                     lightenOff();
                     
                     
                     if (previousFigure.className.slice(7,16) === 'black pwn' && previousCell.parentNode.rowIndex === 1) {
                         previousFigure.time = 0;
+                    }
+                    else if (previousFigure.time && previousFigure.className.slice(13,16) !== 'pwn') {
+                        previousFigure.time = figureTime;
+                        figureTime = 1;
                     }
 
                     errorStep();
@@ -890,6 +972,20 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     }
                     return;
                 }
+
+//////////////////////////////////CASTLING
+
+                if (cell.firstChild === kBlack && currentFigure.cellIndex - previousCell.cellIndex === -2
+                    && figureTime === 0 && blackArr.indexOf(r1Black) !== -1 && r1Black.time === 0) {
+                chessBoard.rows[0].cells[3].appendChild(r1Black)
+                }
+                if (cell.firstChild === kBlack && currentFigure.cellIndex - previousCell.cellIndex === 2
+                && figureTime === 0 && blackArr.indexOf(r2Black) !== -1 && r2Black.time === 0) {
+                chessBoard.rows[0].cells[5].appendChild(r2Black)
+                }
+
+//\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\CASTLING
+
                 setTimeout(turn, 500, color);
                 color = !color;
             }           
@@ -917,10 +1013,19 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 cell.removeChild(cell.firstChild);
                 cell.appendChild(choosenFigure);
 
+                if (choosenFigure === r1Black || choosenFigure === r2Black || choosenFigure === kBlack) {  
+                    if (choosenFigure.time === 0) { figureTime = 0}                
+                    choosenFigure.time = 1;
+                }
+
                 if (checks()) {
                     lightenOff();
                     if (previousFigure.className.slice(7,16) === 'black pwn' && previousCell.parentNode.rowIndex === 1) {
                         previousFigure.time = 0;
+                    }
+                    else if (previousFigure.time && previousFigure.className.slice(13,16) !== 'pwn') {
+                        previousFigure.time = figureTime;
+                        figureTime = 1;
                     }
 
                     errorStep();
@@ -1007,6 +1112,10 @@ function lightenOff() {
     //\\\\\\\\\\\\\\\\\\\\\WHITE KNIGHT
     ///////////////////////WHITE KING
     if (cell === kWhite) {
+        if (checks()) {
+            cell.time = 1;
+        }
+        choosenFigure = cell;
         cell.steps(possibleMoves)
         lighten()
     }
@@ -1052,6 +1161,10 @@ function lightenOff() {
     //\\\\\\\\\\\\\\\\\\\\\BLACK KNIGHT
     ///////////////////////WHITE KING
     if (cell === kBlack) {
+        if (checks()) {
+            cell.time = 1;
+        }
+        choosenFigure = cell;
         cell.steps(possibleMoves)
         lighten()
     }
