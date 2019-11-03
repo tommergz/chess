@@ -105,3 +105,8 @@ body {
     -ms-transform: rotate(180deg);
     transform: rotate(180deg);
 }
+
+.background {
+    background-color: rgb(12, 11, 34);
+    
+}

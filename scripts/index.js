@@ -620,6 +620,16 @@ function checks() {
         return true;
     }
 }
+
+function errorStep() {
+    let king;
+    color ? king = kWhite : king = kBlack;
+    king.style.color = 'red';
+    setTimeout(() => {
+        king.style.color = 'black'; 
+    }, 300);
+}
+
 let upLetters = document.querySelector(".up-letters")
 let bottomLetters = document.querySelector(".bottom-letters")
 function turn(color) {
@@ -672,7 +682,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
 
         if (cell.tagName.toLowerCase() === 'td' && choosenFigure) {
             if (choosenFigure.tagName === 'TD') {
-                lightenOff();
+                
                 return;
             }
             if (possibleMoves.indexOf(cell) != -1) {
@@ -729,9 +739,11 @@ document.getElementById("chessboard").addEventListener('click', () => {
                                   
                 if (checks()) {
                     lightenOff();
-                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex - currentFigure.parentNode.rowIndex === 2) {
+                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex === 6) {
                         previousFigure.time = 0;
                     }
+                    
+                    errorStep();
 
                     whiteArr = whiteArrReserve;
                     blackArr = blackArrReserve;                  
@@ -745,12 +757,15 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 setTimeout(turn, 500, color); 
                 color = !color;
             }           
+            else {
+                lightenOff();
+            }
         }
         
         if (cell.className.slice(7,12) === 'black' && choosenFigure) {
             cell = cell.parentNode;
             if (choosenFigure.tagName === 'TD') {
-                lightenOff();
+
                 return;
             }
             if (possibleMoves.indexOf(cell) != -1) {
@@ -769,9 +784,12 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 if (checks()) {
                     lightenOff();
 
-                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex - currentFigure.parentNode.rowIndex === 2) {
+                    if (previousFigure.className.slice(7,16) === 'white pwn' && previousCell.parentNode.rowIndex === 6) {
                         previousFigure.time = 0;
                     }
+
+                    errorStep();
+
                     whiteArr = whiteArrReserve;
                     blackArr = blackArrReserve;           
                     previousCell.appendChild(previousFigure);
@@ -783,6 +801,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
 
                 setTimeout(turn, 500, color); 
                 color = !color;
+            }
+            else {
+                lightenOff();
             }
         }
     }
@@ -854,9 +875,12 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 if (checks()) {
                     lightenOff();
                     
-                    if (previousFigure.className.slice(7,16) === 'black pwn' && currentFigure.parentNode.rowIndex - previousCell.parentNode.rowIndex === 2) {
+                    
+                    if (previousFigure.className.slice(7,16) === 'black pwn' && previousCell.parentNode.rowIndex === 1) {
                         previousFigure.time = 0;
                     }
+
+                    errorStep();
 
                     whiteArr = whiteArrReserve;
                     blackArr = blackArrReserve;
@@ -869,6 +893,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 setTimeout(turn, 500, color);
                 color = !color;
             }           
+            else {
+                lightenOff();
+            }
         }
 
         if (cell.className.slice(7,12) === 'white' && choosenFigure) {
@@ -892,9 +919,11 @@ document.getElementById("chessboard").addEventListener('click', () => {
 
                 if (checks()) {
                     lightenOff();
-                    if (previousFigure.className.slice(7,16) === 'black pwn' && currentFigure.parentNode.rowIndex - previousCell.parentNode.rowIndex === 2) {
+                    if (previousFigure.className.slice(7,16) === 'black pwn' && previousCell.parentNode.rowIndex === 1) {
                         previousFigure.time = 0;
                     }
+
+                    errorStep();
 
                     whiteArr = whiteArrReserve;
                     blackArr = blackArrReserve;                    
@@ -908,27 +937,34 @@ document.getElementById("chessboard").addEventListener('click', () => {
                 setTimeout(turn, 500, color);
                 color = !color;
             }
+            else {
+                lightenOff();
+            }
         }
     }
 //\\\\\\\\\\\\\\\\\\\\\ХОДЫ  
 
-
 function lighten() {
     whiteArr.forEach(el => {
         el.style.color = "black";
+        el.classList.remove("background");
     });
     blackArr.forEach(el => {
         el.style.color = "black";
+        el.classList.remove("background");
     });
     cell.style.color = '#ffbb00';
+    cell.classList.add("background");
 }   
 
 function lightenOff() {
     whiteArr.forEach(el => {
         el.style.color = "black";
+        el.classList.remove("background");
     });
     blackArr.forEach(el => {
         el.style.color = "black";
+        el.classList.remove("background");
     });
 }
 
@@ -975,6 +1011,7 @@ function lightenOff() {
         lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
+    
   }
   else {
     
@@ -1019,6 +1056,7 @@ function lightenOff() {
         lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
+    
   }
   //\\\\\\\\\\\\\\\\\\\\\\\ВЫБОР ФИГУР 
 })
