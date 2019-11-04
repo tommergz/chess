@@ -188,7 +188,7 @@ addExtraFigures(extraWhiteBishops,'&#9815;', "white");
 addExtraFigures(extraBlackBishops,'&#9821;', "black");
 
 function chooseExtraFigure(extraBlock, extraFigures, colorArr, counter) {
-    //extraBlock.style.display = 'none''; 
+    extraBlock.style.display = 'none'; 
     let newCell = previousFigure;
     colorArr.remove(previousFigure.firstChild);
     colorArr.push(extraFigures[counter.count]);
