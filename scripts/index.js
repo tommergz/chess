@@ -1251,22 +1251,6 @@ function lightenOff() {
         el.classList.remove("background");
     });
 }
-if (previousFigure) {
-    if (checks()) {
-        lightenOff();
-        if (previousFigure.className.slice(7,16) === 'black pwn' && previousCell.parentNode.rowIndex === 1) {
-            previousFigure.time = 0;
-        }
-        else if (previousFigure.time && previousFigure.className.slice(13,16) !== 'pwn') {
-            previousFigure.time = figureTime;
-            figureTime = 1;
-        }
-    
-        errorStep();
-    
-        
-    }
-}
 
 ///////////////////////ВЫБОР ФИГУР 
   if (color) {
