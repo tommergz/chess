@@ -125,7 +125,7 @@ body {
 .extra-white-figures {
     position: absolute;
     left: -13%;
-    display: none;
+    display: flex;
     flex-direction: column;
 }
 
