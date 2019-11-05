@@ -870,6 +870,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
             if (possibleMoves.indexOf(cell) != -1) {
                 let passLeft = 0;
                 let passRight = 0;
+
                 if (choosenFigure === p1White || choosenFigure === p2White || choosenFigure === p3White || choosenFigure === p4White || choosenFigure === p5White || choosenFigure === p6White || choosenFigure === p7White || choosenFigure === p8White) {
                     if (choosenFigure === leftPass) {
                         passLeft = 1;
@@ -877,6 +878,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     if (choosenFigure === rightPass) {
                         passRight = 1;
                     }
+
+                    leftPass = 0;
+                    rightPass = 0;
 
                     if (choosenFigure === p1White || choosenFigure === p2White || choosenFigure === p3White || choosenFigure === p4White || choosenFigure === p5White || choosenFigure === p6White || choosenFigure === p7White || choosenFigure === p8White) {
                         if (choosenFigure.time === 0) {
@@ -949,8 +953,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     }
                     return;
                 }
-                leftPass = 0;
-                rightPass = 0;
+
 //////////////////////////////////CASTLING
 
                     if (cell.firstChild === kWhite && currentFigure.cellIndex - previousCell.cellIndex === 2
@@ -1062,6 +1065,10 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     if (choosenFigure === rightPass) {
                         passRight = 1;
                     }
+
+                    leftPass = 0;
+                    rightPass = 0;
+
                     if (choosenFigure === p1Black || choosenFigure === p2Black || choosenFigure === p3Black || choosenFigure === p4Black || choosenFigure === p5Black || choosenFigure === p6Black || choosenFigure === p7Black || choosenFigure === p8Black) {
                         if (choosenFigure.time === 0) {
                             choosenFigure.time = 1;
@@ -1136,8 +1143,7 @@ document.getElementById("chessboard").addEventListener('click', () => {
                     return;
                 }
 
-                leftPass = 0;
-                rightPass = 0;
+                
 
 //////////////////////////////////CASTLING
 
