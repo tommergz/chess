@@ -31,6 +31,13 @@ body {
     background: url(../assets/images/background6.jpg) center;
 }
 
+.board-wrapp {
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .board {
     position: relative;
     margin: 30px auto;
@@ -146,8 +153,7 @@ body {
 @media (max-width: 850px) {
     .extra-white-figures, .extra-black-figures {
         flex-direction: row;
-        bottom: 50%;
-        left: 5%;
+        left: 0;
         opacity: 0.8;
     }
 
