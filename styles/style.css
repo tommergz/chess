@@ -79,6 +79,10 @@ body {
     height: 70px;
 }
 
+#chessboard div {
+    cursor: pointer;
+}
+
 .numbers {
     width: 34px;
 }
