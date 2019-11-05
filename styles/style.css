@@ -118,7 +118,7 @@ body {
 .extra-white-figures {
     position: absolute;
     left: -13%;
-    display: none;
+    display: flex;
     flex-direction: column;
 }
 
@@ -141,4 +141,160 @@ body {
     font-family: 'Titillium Web';
     font-size: 16px;
     text-align: center;
+}
+
+@media (max-width: 850px) {
+    .extra-white-figures, .extra-black-figures {
+        flex-direction: row;
+        bottom: 50%;
+        left: 5%;
+        opacity: 0.8;
+    }
+
+    .extra-white-figures button, .extra-black-figures button {
+        width: 60px;
+        height: 60px;
+        font-size: 50px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 40px;
+    }
+
+    .choose {
+        display: flex;
+        align-items: center;
+        padding: 5px;
+        background-color: black;
+        margin: 0;
+    }
+}
+
+@media (max-width: 700px) {
+    .extra-white-figures button, .extra-black-figures button {
+        width: 50px;
+        height: 50px;
+        font-size: 31px;
+    }
+
+    .up-letters div div, .bottom-letters div div {
+        width: 62px;
+    }
+    
+    #chessboard {
+        width: auto;
+        height: auto;
+    }
+
+    .numbers td {
+        height: 59px;
+    }
+
+    .numbers {
+        width: 32px;
+    }
+
+    #chessboard td {
+        width: 60px;
+        height: 60px;
+    }
+
+    .figure {
+        font-size: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 600px) {
+    .up-letters div div, .bottom-letters div div {
+        width: 52px;
+    }
+
+    #chessboard td {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .numbers td {
+        height: 49px;
+    }
+
+    .numbers {
+        width: 32px;
+    }
+
+    .figure {
+        font-size: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 505px) {
+    #chessboard {
+        border: 10px solid black;
+    }
+
+    #chessboard td {
+        width: 40px;
+        height: 40px;
+    }
+
+    .up-letters, .bottom-letters {
+        display: none;
+    }
+
+    .numbers {
+        display: none;
+    }
+
+    .figure {
+        font-size: 35px;
+    }
+}
+
+@media (max-width: 400px) {
+    .extra-white-figures button, .extra-black-figures button {
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+    }
+
+    #chessboard td {
+        width: 33px;
+        height: 33px;
+    }
+
+    .figure {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 305px) {
+    .extra-white-figures, .extra-black-figures {
+        left: 4%;
+
+    }
+
+    .extra-white-figures button, .extra-black-figures button {
+        width: 36px;
+        height: 36px;
+        font-size: 24px;
+    }
+
+    .choose {
+        padding: 5px 6px;
+    }
+
+    #chessboard td {
+        width: 25px;
+        height: 25px;
+    }
+
+    .figure {
+        font-size: 24px;
+    }
 }
