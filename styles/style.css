@@ -123,17 +123,15 @@ body {
 }
 
 .extra-white-figures {
-    position: absolute;
-    left: -13%;
     display: none;
-    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 36px;
 }
 
 .extra-black-figures {
-    position: absolute;
-    left: -13%;
     display: none;
-    flex-direction: column;
+    justify-content: space-between;
+    padding: 5px 36px;
 }
 
 .extra-white-figures button, .extra-black-figures button {
@@ -147,15 +145,14 @@ body {
     font-weight: bold;
     font-family: 'Titillium Web';
     font-size: 16px;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    background-color: black;
+    margin: 0;
 }
 
 @media (max-width: 850px) {
-    .extra-white-figures, .extra-black-figures {
-        flex-direction: row;
-        left: 0;
-        opacity: 0.8;
-    }
 
     .extra-white-figures button, .extra-black-figures button {
         width: 60px;
@@ -177,6 +174,10 @@ body {
 }
 
 @media (max-width: 700px) {
+    .extra-white-figures, .extra-black-figures {
+        padding: 5px 33px 10px;
+    }
+
     .extra-white-figures button, .extra-black-figures button {
         width: 50px;
         height: 50px;
@@ -240,6 +241,10 @@ body {
 }
 
 @media (max-width: 505px) {
+    .extra-white-figures, .extra-black-figures {
+        padding: 15px 11px 5px;
+    }
+
     #chessboard {
         border: 10px solid black;
     }
@@ -280,11 +285,6 @@ body {
 }
 
 @media (max-width: 305px) {
-    .extra-white-figures, .extra-black-figures {
-        left: 4%;
-
-    }
-
     .extra-white-figures button, .extra-black-figures button {
         width: 36px;
         height: 36px;
