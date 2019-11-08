@@ -708,7 +708,7 @@ kings.forEach(el => {
         i = this.parentNode.parentNode.rowIndex;
         j = this.parentNode.cellIndex - 1;
         newTarget = chessBoard.rows[i].cells[j];
-        color ? rook = r1White : r1Black;
+        color ? rook = r1White : rook = r1Black;
         if (!newTarget.childNodes.length && this.time === 0 && rook.time === 0) {
             if (cover(newTarget, possibleMoves)) {
                 j-=1;
@@ -722,7 +722,7 @@ kings.forEach(el => {
         i = this.parentNode.parentNode.rowIndex;
         j = this.parentNode.cellIndex + 1;
         newTarget = chessBoard.rows[i].cells[j];
-        color ? rook = r2White : r2Black;
+        color ? rook = r2White : rook = r2Black;
         if (!newTarget.childNodes.length && this.time === 0 && rook.time === 0) {
             if (cover(newTarget, possibleMoves)) {
                 j+=1; 
