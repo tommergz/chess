@@ -804,13 +804,13 @@ function checks() {
     }
 }
 
-function errorStep() {
+function errorStep(time = 1000) {
     let king;
     color ? king = kWhite : king = kBlack;
     king.style.color = 'red';
     setTimeout(() => {
         king.style.color = 'black'; 
-    }, 1000);
+    }, time);
 }
 
 let upLetters = document.querySelector(".up-letters")
@@ -978,6 +978,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
             else {
                 lightenOff();
             }
+            if (checks()) {
+                errorStep(2000)
+            }
         }
         
         if (cell.className.slice(7,12) === 'black' && choosenFigure) {
@@ -1037,6 +1040,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
             }
             else {
                 lightenOff();
+            }
+            if (checks()) {
+                errorStep(2000)
             }
         }
     }
@@ -1170,6 +1176,9 @@ document.getElementById("chessboard").addEventListener('click', () => {
             else {
                 lightenOff();
             }
+            if (checks()) {
+                errorStep(2000)
+            }
         }
 
         if (cell.className.slice(7,12) === 'white' && choosenFigure) {
@@ -1229,8 +1238,11 @@ document.getElementById("chessboard").addEventListener('click', () => {
             else {
                 lightenOff();
             }
+            if (checks()) {
+                errorStep(2000)
+            }
         }
-
+        
     }
 //\\\\\\\\\\\\\\\\\\\\\MOVES\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
