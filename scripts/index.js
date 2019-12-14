@@ -1275,10 +1275,6 @@ function lightenOff() {
 
   if (color) {
 
-    if (checks()) {
-        kWhite.time = 1;
-    }
-
     possibleMoves = [];
     choosenFigure = cell;
     previousCell = cell.parentNode;
@@ -1339,21 +1335,25 @@ function lightenOff() {
     //\\\\\\\\\\\\\\\\\\\\\WHITE KNIGHT
     ///////////////////////WHITE KING
     if (cell === kWhite) {
+        let itWasTime = null;
+        if (!kWhite.time && checks()) {
+            cell.time = 1;
+            itWasTime = true;
+        }
         if (checks()) {
             cell.time = 1;
         }
         choosenFigure = cell;
         cell.steps(possibleMoves)
         lighten()
+        if (itWasTime) {
+            cell.time = 0;
+        }
     }
     //\\\\\\\\\\\\\\\\\\\\\WHITE KING
     
   }
   else {
-    
-    if (checks()) {
-        kBlack.time = 1;
-    }
 
     possibleMoves = [];  
     choosenFigure = cell;
@@ -1413,18 +1413,24 @@ function lightenOff() {
         lighten()
     }
     //\\\\\\\\\\\\\\\\\\\\\BLACK KNIGHT
-    ///////////////////////WHITE KING
+    ///////////////////////BLACK KING
     if (cell === kBlack) {
-        if (checks()) {
+        let itWasTime = null;
+        if (!kBlack.time && checks()) {
             cell.time = 1;
+            itWasTime = true;
         }
         choosenFigure = cell;
         cell.steps(possibleMoves)
         lighten()
+        if (itWasTime) {
+            cell.time = 0;
+        }
     }
-    //\\\\\\\\\\\\\\\\\\\\\WHITE KING
+    //\\\\\\\\\\\\\\\\\\\\\BLACK KING
     
   }
+
 //\\\\\\\\\\\\\\\\\\\\\\\ВЫБОР ФИГУР\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 //\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\ 
 })
